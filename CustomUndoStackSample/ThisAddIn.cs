@@ -19,6 +19,11 @@ namespace CustomUndoStackSample
         {
         }
 
+        protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
+        {
+            return new CustomUndoStackRibbon();
+        }
+
         #region VSTO generated code
 
         /// <summary>
