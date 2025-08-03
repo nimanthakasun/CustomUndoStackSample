@@ -186,6 +186,7 @@ namespace CustomUndoStackSample
                 Word.Style newStyle = Globals.ThisAddIn.Application.ActiveDocument.Styles.Add("CustomParagraphStyle");
                 newStyle.Font.Name = "Arial";
                 newStyle.Font.Size = 10;
+                newStyle.Font.Bold = 0;
                 newStyle.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphJustify;
                 return newStyle;
             }
