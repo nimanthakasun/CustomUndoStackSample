@@ -14,10 +14,10 @@ For a detailed explanation of how and why this works, read the accompanying arti
 🔗[Medium]()
 
 ## Requirements
-- Visual Studio
+- Visual Studio (Version I used here, was Microsoft Visual Studio Community 2022 (64-bit) Version 17.14.9)
 - Microsoft Office (Word)
-- .NET Framework
-- VSTO Add-in project setup
+- ".NET desktop development" enabled on Visual Studio
+- "Office/Sharepoint development" enabled on Visual Studio
 
 ## License
 This project is licensed under the Apache License 2.0.
