@@ -25,7 +25,9 @@ namespace CustomUndoStackSample
             "This behavior can be confusing and cluttered from a user experience" +
             " perspective, as it exposes implementation details that users shouldn't have to deal with. " +
             "Ideally, all those internal actions should be grouped into a single, " +
-            "clean undo entry to improve usability and keep the Undo history meaningful.";
+            "clean undo entry to improve usability and keep the Undo history meaningful.\n" +
+            "Try Uncommenting \"MyUndoRecord.StartCustomRecord(\"My Para Style With Placeholder\");\" line and " +
+            "\"MyUndoRecord.EndCustomRecord();\" lines in the \"OnParagraphButton()\" method.";
 
         public CustomUndoStackRibbon()
         {
@@ -79,9 +81,18 @@ namespace CustomUndoStackSample
 
         public void OnParagraphButton(Office.IRibbonControl control)
         {
-            Word.Range currentRange = Globals.ThisAddIn.Application.Selection.Range;
-            currentRange.Text = placeholderText;
-            currentRange.set_Style(CreateParagraphStyle());
+            //MyUndoRecord.StartCustomRecord("My Para Style With Placeholder");
+            try
+            {
+                Word.Range currentRange = Globals.ThisAddIn.Application.Selection.Range;
+                currentRange.Text = placeholderText;
+                currentRange.set_Style(CreateParagraphStyle());
+            }
+            finally
+            {
+                //MyUndoRecord.EndCustomRecord();
+            }
+
         }
 
         public void OnStyleButton(Office.IRibbonControl control)
