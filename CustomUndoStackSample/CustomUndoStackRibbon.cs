@@ -63,6 +63,13 @@ namespace CustomUndoStackSample
             this.ribbon = ribbonUI;
         }
 
+        /// <summary>
+        /// Applies a custom title style to the currently selected text in the Word document.
+        /// </summary>
+        /// <remarks>This method creates and applies a custom title style to the current selection in the
+        /// Word document. The operation is wrapped in an undo record, allowing the user to undo the action as a single
+        /// step.</remarks>
+        /// <param name="control">The Ribbon control that triggered this action. This parameter is provided by the Office Ribbon framework.</param>
         public void OnTitleButton(Office.IRibbonControl control)
         {
             MyUndoRecord.StartCustomRecord("My Title Style");
@@ -77,6 +84,13 @@ namespace CustomUndoStackSample
             }
         }
 
+        /// <summary>
+        /// Applies a custom subtitle style to the currently selected text in the Word document.
+        /// </summary>
+        /// <remarks>This method starts a custom undo record, applies a predefined subtitle style to the
+        /// current selection in the Word document, and then ends the undo record. If no text is selected, the style is
+        /// applied to the current cursor position.</remarks>
+        /// <param name="control">The Ribbon control that triggered this action.</param>
         public void OnSubTitleButton(Office.IRibbonControl control)
         {
             MyUndoRecord.StartCustomRecord("My Subtitle Style");
@@ -92,6 +106,13 @@ namespace CustomUndoStackSample
             
         }
 
+        /// <summary>
+        /// Applies a custom paragraph style with placeholder text to the currently selected range in the document.
+        /// </summary>
+        /// <remarks>This method add/replaces the text in the current selection with predefined placeholder
+        /// text  and applies a custom paragraph style to the range. Ensure that a valid selection exists  before
+        /// invoking this method.</remarks>
+        /// <param name="control">The Ribbon control that triggered this action.</param>
         public void OnParagraphButton(Office.IRibbonControl control)
         {
             //MyUndoRecord.StartCustomRecord("My Para Style With Placeholder");
@@ -108,6 +129,13 @@ namespace CustomUndoStackSample
 
         }
 
+        /// <summary>
+        /// Applies a custom paragraph style to the currently selected text in the Word document.
+        /// </summary>
+        /// <remarks>This method starts an undo record to group the style application as a single undoable
+        /// action. The custom paragraph style is created and applied to the current selection in the Word
+        /// document.</remarks>
+        /// <param name="control">The Ribbon control that triggered this action.</param>
         public void OnStyleButton(Office.IRibbonControl control)
         {
             MyUndoRecord.StartCustomRecord("My Paragraph Style");
@@ -126,6 +154,9 @@ namespace CustomUndoStackSample
 
         #region Helpers
 
+        /// <summary>
+        /// Gets the current <see cref="Word.UndoRecord"/> instance associated with the application.
+        /// </summary>
         Word.UndoRecord MyUndoRecord
         {
             get
@@ -153,6 +184,15 @@ namespace CustomUndoStackSample
             return null;
         }
 
+        /// <summary>
+        /// Creates or retrieves a custom title style named "CustomTitleStyle" in the active Word document.
+        /// </summary>
+        /// <remarks>If the style "CustomTitleStyle" does not already exist in the active document, this
+        /// method creates it with the following attributes: <list type="bullet"> <item><description>Font:
+        /// Arial</description></item> <item><description>Font size: 14</description></item> <item><description>Bold:
+        /// Enabled</description></item> <item><description>Paragraph alignment: Centered</description></item> </list>
+        /// If the style already exists, the existing style is returned.</remarks>
+        /// <returns>A <see cref="Word.Style"/> object representing the "CustomTitleStyle" in the active Word document.</returns>
         public Word.Style CreateTitleStyle()
         {
             try
@@ -172,6 +212,14 @@ namespace CustomUndoStackSample
             }
         }
 
+        /// <summary>
+        /// Creates or retrieves a custom subtitle style in the active Word document.
+        /// </summary>
+        /// <remarks>This method attempts to create a new style named "CustomSubtitleStyle" in the active
+        /// Word document. If the style already exists, it retrieves and returns the existing style instead of creating
+        /// a new one. The style is configured with the following attributes: - Font: Arial, size 12, bold. - Paragraph
+        /// alignment: Left-aligned.</remarks>
+        /// <returns>A <see cref="Word.Style"/> object representing the "CustomSubtitleStyle" in the active Word document.</returns>
         public Word.Style CreateSubTitleStyle()
         {
             try
@@ -191,6 +239,14 @@ namespace CustomUndoStackSample
             }
         }
 
+        /// <summary>
+        /// Creates or retrieves a custom paragraph style named "CustomParagraphStyle" in the active Word document.
+        /// </summary>
+        /// <remarks>If the style "CustomParagraphStyle" does not already exist in the active document,
+        /// this method creates it  with predefined formatting: Arial font, size 10, not bold, and justified paragraph
+        /// alignment.  If the style already exists, it retrieves the existing style instead of creating a new
+        /// one.</remarks>
+        /// <returns>A <see cref="Word.Style"/> object representing the "CustomParagraphStyle" in the active Word document.</returns>
         public Word.Style CreateParagraphStyle()
         {
             try
