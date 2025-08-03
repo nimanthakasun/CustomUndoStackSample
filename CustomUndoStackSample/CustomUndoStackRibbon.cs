@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Word;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,24 +9,6 @@ using System.Text;
 using Office = Microsoft.Office.Core;
 using Word = Microsoft.Office.Interop.Word;
 
-// TODO:  Follow these steps to enable the Ribbon (XML) item:
-
-// 1: Copy the following code block into the ThisAddin, ThisWorkbook, or ThisDocument class.
-
-//  protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
-//  {
-//      return new Ribbon1();
-//  }
-
-// 2. Create callback methods in the "Ribbon Callbacks" region of this class to handle user
-//    actions, such as clicking a button. Note: if you have exported this Ribbon from the Ribbon designer,
-//    move your code from the event handlers to the callback methods and modify the code to work with the
-//    Ribbon extensibility (RibbonX) programming model.
-
-// 3. Assign attributes to the control tags in the Ribbon XML file to identify the appropriate callback methods in your code.  
-
-// For more information, see the Ribbon XML documentation in the Visual Studio Tools for Office Help.
-
 
 namespace CustomUndoStackSample
 {
@@ -33,6 +16,16 @@ namespace CustomUndoStackSample
     public class CustomUndoStackRibbon : Office.IRibbonExtensibility
     {
         private Office.IRibbonUI ribbon;
+
+        private string placeholderText = "This text was added by the Ribbon of CustomUndoSample. " +
+            "If you click the dropdown arrow next to the Undo button, you'll notice that no " +
+            "custom undo record has been created for this specific operation. " +
+            "Instead, each internal step of the process appears individually in the Undo stack - " +
+            "even though the entire action was triggered by a single click. \n" +
+            "This behavior can be confusing and cluttered from a user experience" +
+            " perspective, as it exposes implementation details that users shouldn't have to deal with. " +
+            "Ideally, all those internal actions should be grouped into a single, " +
+            "clean undo entry to improve usability and keep the Undo history meaningful.";
 
         public CustomUndoStackRibbon()
         {
@@ -55,40 +48,67 @@ namespace CustomUndoStackSample
             this.ribbon = ribbonUI;
         }
 
-        public void OnTextButton(Office.IRibbonControl control)
+        public void OnTitleButton(Office.IRibbonControl control)
         {
-            Word.Range currentRange = Globals.ThisAddIn.Application.Selection.Range;
-            currentRange.Text = "This text was added by the Ribbon.";
-        }
-
-        public void OnTableButton(Office.IRibbonControl control)
-        {
-            object missing = System.Type.Missing;
-            Word.Range currentRange = Globals.ThisAddIn.Application.Selection.Range;
-            Word.Table newTable = Globals.ThisAddIn.Application.ActiveDocument.Tables.Add(
-            currentRange, 3, 4, ref missing, ref missing);
-
-            // Get all of the borders except for the diagonal borders.
-            Word.Border[] borders = new Word.Border[6];
-            borders[0] = newTable.Borders[Word.WdBorderType.wdBorderLeft];
-            borders[1] = newTable.Borders[Word.WdBorderType.wdBorderRight];
-            borders[2] = newTable.Borders[Word.WdBorderType.wdBorderTop];
-            borders[3] = newTable.Borders[Word.WdBorderType.wdBorderBottom];
-            borders[4] = newTable.Borders[Word.WdBorderType.wdBorderHorizontal];
-            borders[5] = newTable.Borders[Word.WdBorderType.wdBorderVertical];
-
-            // Format each of the borders.
-            foreach (Word.Border border in borders)
+            MyUndoRecord.StartCustomRecord("My Title Style");
+            try
             {
-                border.LineStyle = Word.WdLineStyle.wdLineStyleSingle;
-                border.Color = Word.WdColor.wdColorBlue;
+                Word.Range currentRange = Globals.ThisAddIn.Application.Selection.Range;
+                currentRange.set_Style(CreateTitleStyle());
+            }
+            finally
+            {
+                MyUndoRecord.EndCustomRecord();
             }
         }
 
+        public void OnSubTitleButton(Office.IRibbonControl control)
+        {
+            MyUndoRecord.StartCustomRecord("My Subtitle Style");
+            try
+            {
+                Word.Range currentRange = Globals.ThisAddIn.Application.Selection.Range;
+                currentRange.set_Style(CreateSubTitleStyle());
+            }
+            finally
+            {
+                MyUndoRecord.EndCustomRecord();
+            }
+            
+        }
+
+        public void OnParagraphButton(Office.IRibbonControl control)
+        {
+            Word.Range currentRange = Globals.ThisAddIn.Application.Selection.Range;
+            currentRange.Text = placeholderText;
+            currentRange.set_Style(CreateParagraphStyle());
+        }
+
+        public void OnStyleButton(Office.IRibbonControl control)
+        {
+            MyUndoRecord.StartCustomRecord("My Paragraph Style");
+            try
+            {
+                Word.Range currentRange = Globals.ThisAddIn.Application.Selection.Range;
+                currentRange.set_Style(CreateParagraphStyle());
+            }
+            finally
+            {
+                MyUndoRecord.EndCustomRecord();
+            }
+
+        }
         #endregion
 
         #region Helpers
 
+        Word.UndoRecord MyUndoRecord
+        {
+            get
+            {
+                return Globals.ThisAddIn.Application.UndoRecord;
+            }
+        }
         private static string GetResourceText(string resourceName)
         {
             Assembly asm = Assembly.GetExecutingAssembly();
@@ -107,6 +127,62 @@ namespace CustomUndoStackSample
                 }
             }
             return null;
+        }
+
+        public Word.Style CreateTitleStyle()
+        {
+            try
+            {
+                // Attempt to create a new style
+                Word.Style newStyle = Globals.ThisAddIn.Application.ActiveDocument.Styles.Add("CustomTitleStyle");
+                newStyle.Font.Name = "Arial";
+                newStyle.Font.Size = 14;
+                newStyle.Font.Bold = 1;
+                newStyle.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                return newStyle;
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                // If the style already exists, we can just return it
+                return Globals.ThisAddIn.Application.ActiveDocument.Styles["CustomTitleStyle"];
+            }
+        }
+
+        public Word.Style CreateSubTitleStyle()
+        {
+            try
+            {
+                // Attempt to create a new style
+                Word.Style newStyle = Globals.ThisAddIn.Application.ActiveDocument.Styles.Add("CustomSubtitleStyle");
+                newStyle.Font.Name = "Arial";
+                newStyle.Font.Size = 12;
+                newStyle.Font.Bold = 1;
+                newStyle.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphLeft;
+                return newStyle;
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                // If the style already exists, return it
+                return Globals.ThisAddIn.Application.ActiveDocument.Styles["CustomSubtitleStyle"];
+            }
+        }
+
+        public Word.Style CreateParagraphStyle()
+        {
+            try
+            {
+                // Attempt to create a new style
+                Word.Style newStyle = Globals.ThisAddIn.Application.ActiveDocument.Styles.Add("CustomParagraphStyle");
+                newStyle.Font.Name = "Arial";
+                newStyle.Font.Size = 10;
+                newStyle.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphJustify;
+                return newStyle;
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                // If the style already exists, return it
+                return Globals.ThisAddIn.Application.ActiveDocument.Styles["CustomParagraphStyle"];
+            }
         }
 
         #endregion
