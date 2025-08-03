@@ -18,19 +18,19 @@
     <tabs>
       <tab idMso="TabAddIns">
         <group id="HeaderGroup" label="Headers">
-          <button id="titleButton" label="Insert Title"
+          <button id="titleButton" label="Insert Title" imageMso="FontSizeIncreaseWord"
                screentip="Title" onAction="OnTitleButton"
                supertip="Inserts a Level 1 Title" size="large"/>
-          <button id="subtitleButton" label="Insert Subtitle"
+          <button id="subtitleButton" label="Insert Subtitle" imageMso="FontSizeDecreaseWord"
                screentip="Subtitle" onAction="OnSubTitleButton"
                supertip="Inserts a Level 2 Title." size="large"/>
         </group>
         <group id="ContentGroup" label="Contents">
-          <button id="paragraphButton" label="Insert Paragraph"
+          <button id="paragraphButton" label="Insert Paragraph" imageMso="TextFromFileInsert"
                screentip="Paragraph" onAction="OnParagraphButton"
                supertip="Inserts a paragraph at the cursor location, with styles applied."
                size="large"/>
-          <button id="styleButton" label="Style Paragraph"
+          <button id="styleButton" label="Style Paragraph" imageMso="AlignJustify"
                screentip="Style" onAction="OnStyleButton"
                supertip="Applly a style to the selected paragraph."
                size="large"/>
