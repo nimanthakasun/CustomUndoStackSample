@@ -1,16 +1,28 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_Load">
   <ribbon>
-    <tab idMso="TabAddIns">
-      <group id="ContentGroup" label="Content">
-        <button id="textButton" label="Insert Text"
-             screentip="Text" onAction="OnTextButton"
-             supertip="Inserts text at the cursor location."/>
-        <button id="tableButton" label="Insert Table"
-             screentip="Table" onAction="OnTableButton"
-             supertip="Inserts a table at the cursor location."/>
-      </group>
-    </tab>
+    <tabs>
+      <tab idMso="TabAddIns">
+        <group id="HeaderGroup" label="Headers">
+          <button id="titleButton" label="Insert Title"
+               screentip="Title" onAction="OnTitleButton"
+               supertip="Inserts a Level 1 Title" size="large"/>
+          <button id="subtitleButton" label="Insert Subtitle"
+               screentip="Subtitle" onAction="OnSubTitleButton"
+               supertip="Inserts a Level 2 Title." size="large"/>
+        </group>
+        <group id="ContentGroup" label="Contents">
+          <button id="paragraphButton" label="Insert Paragraph"
+               screentip="Paragraph" onAction="OnParagraphButton"
+               supertip="Inserts a paragraph at the cursor location, with styles applied."
+               size="large"/>
+          <button id="styleButton" label="Style Paragraph"
+               screentip="Style" onAction="OnStyleButton"
+               supertip="Applly a style to the selected paragraph."
+               size="large"/>
+        </group>
+      </tab>
+    </tabs>
   </ribbon>
 </customUI>
 
