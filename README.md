@@ -10,7 +10,7 @@ Microsoft Word using CustomUndoRecord in a C# VSTO Add-in.
 
 ## Read the Article
 For a detailed explanation of how and why this works, read the accompanying article here:
-🔗[Linkedin]()
+🔗[Linkedin](https://www.linkedin.com/pulse/how-control-ms-words-undo-stack-vsto-c-kasun-nimantha-hqt0c/)
 🔗[Medium]()
 
 ## Requirements
