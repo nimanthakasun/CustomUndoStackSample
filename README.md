@@ -11,7 +11,7 @@ Microsoft Word using CustomUndoRecord in a C# VSTO Add-in.
 ## Read the Article
 For a detailed explanation of how and why this works, read the accompanying article here:
 🔗[Linkedin](https://www.linkedin.com/pulse/how-control-ms-words-undo-stack-vsto-c-kasun-nimantha-hqt0c/)
-🔗[Medium]()
+🔗[Medium](https://medium.com/@kasun_nimantha/how-to-control-ms-words-undo-stack-with-undorecord-customrecord-in-vsto-c-767776a7905b)
 
 ## Requirements
 - Visual Studio (Version I used here, was Microsoft Visual Studio Community 2022 (64-bit) Version 17.14.9)
